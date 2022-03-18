@@ -1,16 +1,21 @@
-function l(msg) {
-    console.log(msg);
-}
-l('[DevSoutinho] Flappy Bird');
+console.log('[DevSoutinho] Flappy Bird');
 
 let frames = 0;
 
 const som_HIT = new Audio();
 som_HIT.src = "./efeitos/hit.wav";
 
+const som_PULO = new Audio();
+som_PULO.src = "./efeitos/pulo.wav";
+
+const som_PONTO = new Audio();
+som_PONTO.src = "./efeitos/ponto.wav";
+
+const som_CAIU = new Audio();
+som_CAIU.src = "./efeitos/caiu.wav";
 
 const sprites = new Image();
-sprites.src = './sprites.png';
+sprites.src = "./sprites.png";
 
 const canvas = document.querySelector('canvas');
 const contexto = canvas.getContext('2d');
@@ -79,6 +84,7 @@ function criaFlappyBird() {
     
         pula() {
             flappyBird.velocidade = - flappyBird.pulo;
+            som_PULO.play();
         },
     
         gravidade: 0.25,
@@ -86,7 +92,7 @@ function criaFlappyBird() {
     
         atualiza() {
             if(fazColisao(flappyBird, globais.chao)) {
-                som_HIT.play();
+                som_CAIU.play();
                 mudaParaTela(Telas.GAME_OVER);
                 
                 return;
@@ -266,7 +272,7 @@ function criaCanos() {
 
             if(globais.flappyBird.x + (globais.flappyBird.largura - 4)>= par.x) {
                 
-                if(cabecaDoFlappy <= par.canoCeu.y) {
+                if(cabecaDoFlappy + 5 <= par.canoCeu.y) {
                     return true;
                 }
 
@@ -313,13 +319,15 @@ function criaPlacar() {
             contexto.textAlign = 'right';
             contexto.fillStyle = 'white';
             contexto.fillText(`${placar.pontuacao}`, canvas.width - 10, 35);
+            
         },
         atualiza() {
-            const intervaloDeFrames = 50;
+            const intervaloDeFrames = 150;
             const passouOIntervalo = frames % intervaloDeFrames === 0;
             
             if(passouOIntervalo) {
                 placar.pontuacao++;
+                som_PONTO.play();
             }
         },
     }
@@ -397,8 +405,6 @@ const Telas = {
         }
     }
 };
-
-
 
 
 
